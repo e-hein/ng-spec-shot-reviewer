@@ -1,3 +1,7 @@
 <ul>
-  <li *ngFor="let specShot of specShots; trackBy: trackById" [ngClass]="{ selected: specShot === selected }"><a (click)="onSelect(specShot)">{{specShot.id}}</a></li>
+  <li *ngFor="let specShot of specShots; trackBy: trackById" [ngClass]="{ selected: specShot === selected }">
+    <mat-icon *ngIf="specShot.approved; else disapproved" color="accent">thumb_up</mat-icon>
+    <ng-template #disapproved><mat-icon color="warn">thumb_down</mat-icon></ng-template>
+    <a (click)="onSelect(specShot)">{{specShot.title}}</a>
+  </li>
 </ul>

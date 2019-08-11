@@ -1,3 +1,5 @@
 <ssr-page-layout i18n-title="@@review-page-title" title="review">
   <ssr-spec-shot-list [specShots]="specShots" (select)="selectSpecShot($event)"></ssr-spec-shot-list>
+  <button mat-raised-button (click)="applyApprovements()" *ngIf="approvedCount > 0">apply {{approvedCount}} approvements</button>
+  <ssr-spec-shot-details [specShot]="selectedSpecShot" *ngIf="selectedSpecShot" (vote)="vote($event)"></ssr-spec-shot-details>
 </ssr-page-layout>

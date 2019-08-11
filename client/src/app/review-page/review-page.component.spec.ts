@@ -1,12 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { of as observableOf } from 'rxjs';
-
-import { ReviewPageComponent } from './review-page.component';
-import { PageLayoutComponent } from '../page-layout/page-layout.component';
-import { SpecShotListComponent } from '../spec-shot-list/spec-shot-list.component';
 import { HttpClient } from '@angular/common/http';
-import { SpecShot } from 'api';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { SpecShot } from 'api';
+import { of as observableOf } from 'rxjs';
+import { PageLayoutComponent } from '../page-layout/page-layout.component';
+import { SpecShotDetailsComponent } from '../spec-shot-details/spec-shot-details.component';
+import { SpecShotListComponent } from '../spec-shot-list/spec-shot-list.component';
+import { ReviewPageComponent } from './review-page.component';
 
 fdescribe('ReviewPageComponent', () => {
   let component: ReviewPageComponent;
@@ -14,7 +14,12 @@ fdescribe('ReviewPageComponent', () => {
   let http: HttpClient;
 
   beforeEach(async(() => TestBed.configureTestingModule({
-    declarations: [ ReviewPageComponent, PageLayoutComponent, SpecShotListComponent ],
+    declarations: [
+      ReviewPageComponent,
+      PageLayoutComponent,
+      SpecShotListComponent,
+      SpecShotDetailsComponent,
+    ],
     providers: [
       { provide: HttpClient, useValue: { get: () => {} } },
     ]

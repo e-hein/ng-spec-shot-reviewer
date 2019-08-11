@@ -21,14 +21,30 @@ export class SsrEndpoint {
     this.server = new FsSsrServer(serverCfg);
     this.router.use('*', cors(corsOptions))
     this.router.get('/test', (_, res) => res.send('Ok'));
+    this.router.put('/spec-shot/:id/approve', (req, res) => {
+      this.server.approve(encodeURIComponent(req.params['id']))
+        .then(() => res.sendStatus(200))
+        .catch((e) => res.send(e).sendStatus(400))
+    })
+    this.router.put('/spec-shot/:id/disapprove', (req, res) => {
+      this.server.disapprove(encodeURIComponent(req.params['id']))
+        .then(() => res.sendStatus(200))
+        .catch((e) => res.send(e).sendStatus(400))
+    })
     this.router.get('/spec-shot', async (req, res) => {
       if (req.headers['cache-control'] === 'no-cache') {
         this.server.refresh();
       }
       res.send(JSON.stringify(await this.server.specShots()));
     });
+    this.router.put('/applyApprovements', (req, res) => {
+      this.server.applyApprovements(req.body)
+        .then(() => res.sendStatus(200))
+        .catch((e) => res.send(e).sendStatus(400))
+      ;
+    })
     this.router.use('/image/actual', serveStatic(serverCfg.directories.actual));
     this.router.use('/image/diff', serveStatic(serverCfg.directories.diff));
-    this.router.use('/image/baseline', serveStatic(serverCfg.directories.diff));
+    this.router.use('/image/baseline', serveStatic(serverCfg.directories.baseline));
   }
 }

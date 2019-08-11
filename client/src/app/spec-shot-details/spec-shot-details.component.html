@@ -1,1 +1,17 @@
-<p>spec-shot-details works!</p>
+<h2>{{specShot.title}}</h2>
+<button mat-raised-button color="accent" (click)="vote.emit(true)">approve</button>
+<button mat-raised-button color="error" (click)="vote.emit(false)">disapprove</button>
+<div class="spec-shot-images">
+  <mat-card class="spec-shot-image" *ngIf="specShot.actual">
+    <mat-card-header><h3>actual</h3></mat-card-header>
+    <img [src]="specShot.actual.filename" />
+  </mat-card>
+  <mat-card class="spec-shot-image" *ngIf="specShot.diff">
+    <mat-card-header><h3>diff</h3></mat-card-header>
+    <img [src]="specShot.diff.filename" />
+  </mat-card>
+  <mat-card class="spec-shot-image" *ngIf="specShot.baseline">
+    <mat-card-header><h3>baseline</h3></mat-card-header>
+    <img [src]="specShot.baseline.filename" />
+  </mat-card>
+</div>

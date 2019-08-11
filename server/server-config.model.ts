@@ -13,5 +13,6 @@ export class SsrServerConfig {
   constructor(
     baseDir: string,
     public directories = new SsrImageDirectoriesConfig(baseDir),
+    public approvedFilePath = join(baseDir, 'approved.json'),
   ) {}
 }

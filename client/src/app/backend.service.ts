@@ -22,7 +22,7 @@ export class BackendService implements SsrServer {
 
   private addBaseUrls(specShots: SpecShot[]) {
     return specShots.map((specShot) => ({
-      id: specShot.id,
+      ...specShot,
       actual: this.addBaseUrl(specShot.actual),
       diff: this.addBaseUrl(specShot.diff),
       baseline: this.addBaseUrl(specShot.baseline),
@@ -36,7 +36,27 @@ export class BackendService implements SsrServer {
 
     return {
       ...specShotFile,
-      filename: baseUrl + '/' + specShotFile,
+      filename: baseUrl + '/image/' + specShotFile.filename,
     }
+  }
+
+  public approve(id: string) {
+    return this.http
+      .put(baseUrl + '/spec-shot/' + id + '/approve', '', { responseType: 'text' })
+      .pipe(take(1)).toPromise().then(() => {})
+    ;
+  }
+  public disapprove(id: string) {
+    return this.http
+      .put(baseUrl + '/spec-shot/' + id + '/disapprove', '', { responseType: 'text' })
+      .pipe(take(1)).toPromise().then(() => {})
+    ;
+  }
+
+  public applyApprovements(ids: string[]) {
+    return this.http
+      .put(baseUrl + '/applyApprovements', JSON.stringify(ids), { responseType: 'text' })
+      .pipe(take(1)).toPromise().then(() => {})
+    ;
   }
 }

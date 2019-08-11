@@ -11,6 +11,7 @@ export class SpecShot {
   public approved = false;
 
   constructor(
-    public readonly id: string
+    public readonly id: string,
+    public title: string = decodeURIComponent(id).replace(/[-_/]/g, ' '),
   ) {}
 }

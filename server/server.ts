@@ -1,7 +1,7 @@
 import { SsrServerConfig } from './server-config.model';
 import { SpecShot, SpecShotFile, SsrServer } from '../api';
-import { readdirSync, statSync, accessSync } from 'fs';
-import { join as joinPath, relative as relativePath, dirname, basename } from 'path';
+import { readdirSync, statSync, accessSync, writeFileSync, readFileSync, unlinkSync, copyFileSync,  } from 'fs';
+import { join as joinPath, relative as relativePath, resolve as absolutePath, dirname, basename } from 'path';
 import chalk from 'chalk';
 import { R_OK } from 'constants';
 
@@ -19,6 +19,20 @@ export class FsSsrServer implements SsrServer {
     this.scanForImages('actual');
     this.scanForImages('diff');
     this.scanForImages('baseline');
+
+    const approvements = this.readApprovedFile();
+    this._specShots.forEach((specShot) => {
+      specShot.approved = approvements.includes(specShot.id);
+    })
+  }
+
+  private readApprovedFile() {
+    try {
+      return JSON.parse(readFileSync(this.cfg.approvedFilePath, 'UTF-8')) as string[];
+    } catch (e) {
+      console.warn(chalk.yellow('WARN: did not found any approvements, yet'));
+      return [];
+    }
   }
 
   private scanForImages(type: 'actual' | 'diff' | 'baseline') {
@@ -36,7 +50,7 @@ export class FsSsrServer implements SsrServer {
       .forEach((specShotFile) => {
         const fileDir = dirname(specShotFile.filename);
         const fileName = basename(specShotFile.filename, '.png');
-        const id = relativePath(baseDir, joinPath(this.cfg.directories.baseDir, fileDir, fileName));
+        const id = encodeURIComponent(relativePath(baseDir, joinPath(this.cfg.directories.baseDir, fileDir, fileName)));
         const specShot = this.getOrCreateSpecShot(id);
         specShot[type] = specShotFile;
       });
@@ -79,5 +93,52 @@ export class FsSsrServer implements SsrServer {
 
   public specShots(): Promise<SpecShot[]> {
     return Promise.resolve(this._specShots.slice());
+  }
+
+  public approve(id: string): Promise<void> {
+    return this.vote(id, true);
+  }
+
+  public disapprove(id: string): Promise<void> {
+    return this.vote(id, false);
+  }
+
+  private vote(id: string, approved: boolean): Promise<void> {
+    const specShotToApprove = this._specShots.find((specShot) => specShot.id === id);
+    if (!specShotToApprove) {
+      throw new Error(`spec shot with id ${id} not found`);
+    }
+    specShotToApprove.approved = approved;
+
+    writeFileSync(this.cfg.approvedFilePath, JSON.stringify(this._specShots.filter((specShot) => specShot.approved).map((specShot) => specShot.id)), 'utf-8');
+
+    return Promise.resolve();
+  }
+
+  public applyApprovements(ids: string[]) {
+    ids.forEach((id) => {
+      const specShot = this._specShots.find((specShot) => specShot.id === id);
+      if (!specShot) {
+        throw new Error(`spec shot with id ${id} not found`);
+      }
+      const actualFile = specShot.actual;
+      const baselineFile = specShot.actual;
+      if (actualFile) {
+        const actual = absolutePath(joinPath(this.cfg.directories.baseDir, actualFile.filename));
+        const relative = relativePath(this.cfg.directories.actual, actual);
+        const baseline = joinPath(this.cfg.directories.baseline, relative);
+        copyFileSync(actual, relative);
+        unlinkSync(actual);
+      } else if (baselineFile) {
+        const baseline = absolutePath(joinPath(this.cfg.directories.baseDir, baselineFile.filename));
+        unlinkSync(baseline);
+      }
+      const diffFile = specShot.diff;
+      if (diffFile) {
+        const diff = absolutePath(joinPath(this.cfg.directories.baseDir, diffFile.filename));
+        unlinkSync(diff);
+      }
+    });
+    return Promise.resolve();
   }
 }
