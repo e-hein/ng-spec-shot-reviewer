@@ -25,7 +25,9 @@
     "e2e:en": "protractor ./e2e/protractor.en.conf.js",
     "server-build": "cd ../server; tsc",
     "server-start": "ts-node -P ../server/tsconfig.json ../server/app.ts",
-    "update-webdriver": "webdriver-manager update"
+    "update-webdriver": "webdriver-manager update",
+    "build:all": "npm run build:de; npm run build:en",
+    "e2e:all": "npm run e2e; npm run e2e:de; npm run e2e:en"
   },
   "private": true,
   "dependencies": {
