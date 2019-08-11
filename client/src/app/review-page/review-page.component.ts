@@ -1,6 +1,6 @@
-import { Component, OnInit, TrackByFunction } from '@angular/core';
-import { BackendService } from '../backend.service';
+import { Component, OnInit } from '@angular/core';
 import { SpecShot } from 'api';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'ssr-review-page',
@@ -10,7 +10,6 @@ import { SpecShot } from 'api';
 export class ReviewPageComponent implements OnInit {
   public specShots: SpecShot[];
   public selectedSpecShot: SpecShot;
-  public trackById: TrackByFunction<{ id: string}> = (_, obj) => obj.id;
 
   constructor(
     private backend: BackendService,
