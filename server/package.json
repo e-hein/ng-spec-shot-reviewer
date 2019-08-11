@@ -1,0 +1,30 @@
+{
+  "name": "ng-spec-shot-reviewer-server",
+  "version": "1.0.0",
+  "description": "combined server of spec shot reviewer backend and optionally multiple static websites (e.g. compiled angular apps)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "angular",
+    "test",
+    "review",
+    "image",
+    "comparision"
+  ],
+  "author": "Emanuel Hein",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@types/express": "^4.17.0",
+    "chalk": "^2.4.2",
+    "express": "^4.17.1",
+    "tslib": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "~8.9.4",
+    "ts-node": "^7.0.1",
+    "tslint": "~5.15.0",
+    "typescript": "~3.5.3"
+  }
+}

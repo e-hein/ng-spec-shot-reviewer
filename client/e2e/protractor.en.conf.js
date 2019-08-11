@@ -15,10 +15,10 @@ exports.config = {
   ],
   capabilities: {
     'browserName': 'chrome',
-    'logName': 'de'
+    'logName': 'en'
   },
   directConnect: true,
-  baseUrl: 'http://localhost:8080/ssr-de',
+  baseUrl: 'http://localhost:8090/ssr-en',
   framework: 'jasmine',
   plugins: [
     {

@@ -1,5 +1,5 @@
 import { SsrServerConfig } from './server-config.model';
-import { SpecShot, SpecShotFile } from './spec-shot.model';
+import { SpecShot, SpecShotFile } from '../api/spec-shot';
 import { readdirSync, statSync } from 'fs';
 import { join as joinPath, relative as relativePath } from 'path';
 import chalk from 'chalk';
