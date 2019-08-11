@@ -1,1 +1,3 @@
-<p>spec-shot-list works!</p>
+<ul>
+  <li *ngFor="let specShot of specShots; trackBy: trackById" [ngClass]="{ selected: specShot === selected }"><a (click)="onSelect(specShot)">{{specShot.id}}</a></li>
+</ul>

@@ -1,1 +1,3 @@
-<ssr-page-layout i18n-title="@@review-page-title" title="review"></ssr-page-layout>
+<ssr-page-layout i18n-title="@@review-page-title" title="review">
+  <ssr-spec-shot-list [specShots]="specShots" (select)="selectSpecShot($event)"></ssr-spec-shot-list>
+</ssr-page-layout>

@@ -1,20 +1,20 @@
 import { SsrServerConfig } from './server-config.model';
-import { SpecShot, SpecShotFile } from '../api/spec-shot';
+import { SpecShot, SpecShotFile, SsrServer } from '../api';
 import { readdirSync, statSync, accessSync } from 'fs';
-import { join as joinPath, relative as relativePath } from 'path';
+import { join as joinPath, relative as relativePath, dirname, basename } from 'path';
 import chalk from 'chalk';
 import { R_OK } from 'constants';
 
-export class SsrServer {
+export class FsSsrServer implements SsrServer {
   private _specShots: SpecShot[] = [];
 
   constructor(
     private cfg: SsrServerConfig,
   ) {
-    this.init();
+    this.refresh();
   }
 
-  private init(): void {
+  public refresh(): void {
     this._specShots = [];
     this.scanForImages('actual');
     this.scanForImages('diff');
@@ -31,9 +31,12 @@ export class SsrServer {
       return;
     }
 
+    console.log('scan for images', baseDir);
     this.findSpecShots(baseDir)
       .forEach((specShotFile) => {
-        const id = relativePath(baseDir, specShotFile.filename);
+        const fileDir = dirname(specShotFile.filename);
+        const fileName = basename(specShotFile.filename, '.png');
+        const id = relativePath(baseDir, joinPath(this.cfg.directories.baseDir, fileDir, fileName));
         const specShot = this.getOrCreateSpecShot(id);
         specShot[type] = specShotFile;
       });
@@ -58,7 +61,11 @@ export class SsrServer {
         const stats = statSync(entry);
         return stats.isDirectory()
           ? this.findSpecShots(entry)
-          : this.foundSpecShot({ filename: entry, stats })
+          : this.foundSpecShot({
+            filename: relativePath(this.cfg.directories.baseDir, entry),
+            timestamp: stats.mtime.getTime(),
+            size: stats.size,
+           })
         ;
       })
       .reduce((ids, more) => ids.concat(...more), new Array<SpecShotFile>())
@@ -70,7 +77,7 @@ export class SsrServer {
     return [specShotFile];
   }
 
-  public specShots(): SpecShot[] {
-    return this._specShots.slice();
+  public specShots(): Promise<SpecShot[]> {
+    return Promise.resolve(this._specShots.slice());
   }
 }
