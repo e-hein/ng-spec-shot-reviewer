@@ -1,8 +1,9 @@
 import { SsrServerConfig } from './server-config.model';
 import { SpecShot, SpecShotFile } from '../api/spec-shot';
-import { readdirSync, statSync } from 'fs';
+import { readdirSync, statSync, accessSync } from 'fs';
 import { join as joinPath, relative as relativePath } from 'path';
 import chalk from 'chalk';
+import { R_OK } from 'constants';
 
 export class SsrServer {
   private _specShots: SpecShot[] = [];
@@ -22,7 +23,15 @@ export class SsrServer {
 
   private scanForImages(type: 'actual' | 'diff' | 'baseline') {
     const baseDir = this.cfg.directories[type];
-    this.findSpecShots(this.cfg.directories[type])
+
+    try {
+      accessSync(baseDir, R_OK);
+    } catch(e) {
+      console.warn(chalk.yellow(`WARN: no '${type}'-images found!`));
+      return;
+    }
+
+    this.findSpecShots(baseDir)
       .forEach((specShotFile) => {
         const id = relativePath(baseDir, specShotFile.filename);
         const specShot = this.getOrCreateSpecShot(id);
