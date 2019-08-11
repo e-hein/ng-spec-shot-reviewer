@@ -10,7 +10,7 @@
     "comparision"
   ],
   "author": "Emanuel Hein",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -14,7 +14,7 @@
     "comparision"
   ],
   "author": "Emanuel Hein",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "ng-spec-shot-reviewer-client": "file:client",
