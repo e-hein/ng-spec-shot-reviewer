@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { SpecShotListComponent } from './spec-shot-list/spec-shot-list.component';
 import { ReviewPageComponent } from './review-page/review-page.component';
+import { PageLayoutComponent } from './page-layout/page-layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomePageComponent,
     SpecShotListComponent,
-    ReviewPageComponent
+    ReviewPageComponent,
+    PageLayoutComponent
   ],
   imports: [
     BrowserModule,
