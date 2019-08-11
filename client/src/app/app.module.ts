@@ -5,11 +5,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { SpecShotListComponent } from './spec-shot-list/spec-shot-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomePageComponent,
+    SpecShotListComponent
   ],
   imports: [
     BrowserModule,
