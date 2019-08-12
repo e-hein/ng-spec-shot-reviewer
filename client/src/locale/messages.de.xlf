@@ -34,6 +34,46 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="approve-acction" datatype="html">
+        <source>approve</source>
+        <target>bestätigen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/spec-shot-details/spec-shot-details.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="disapprove-action" datatype="html">
+        <source>disapprove</source>
+        <target>zurückweisen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/spec-shot-details/spec-shot-details.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="actual-title" datatype="html">
+        <source>actual</source>
+        <target>Aktuell</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/spec-shot-details/spec-shot-details.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="diff-title" datatype="html">
+        <source>diff</source>
+        <target>Unterschiede</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/spec-shot-details/spec-shot-details.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="baseline-title" datatype="html">
+        <source>baseline</source>
+        <target>Letzte Version</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/spec-shot-details/spec-shot-details.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
