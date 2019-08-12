@@ -25,6 +25,9 @@ export class ReviewPageComponent implements OnInit {
       || specShot.diff
       || !specShot.baseline
     );
+    if (this.selectedSpecShot && !this.specShots.some((specShot) => specShot.id === this.selectedSpecShot.id)) {
+      delete this.selectedSpecShot;
+    }
     this.countApprovements();
   }
 
