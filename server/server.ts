@@ -110,9 +110,13 @@ export class FsSsrServer implements SsrServer {
     }
     specShotToApprove.approved = approved;
 
-    writeFileSync(this.cfg.approvedFilePath, JSON.stringify(this._specShots.filter((specShot) => specShot.approved).map((specShot) => specShot.id)), 'utf-8');
+    this.updateApprovedFile();
 
     return Promise.resolve();
+  }
+
+  private updateApprovedFile() {
+    writeFileSync(this.cfg.approvedFilePath, JSON.stringify(this._specShots.filter((specShot) => specShot.approved).map((specShot) => specShot.id)), 'utf-8');
   }
 
   public applyApprovements(ids: string[]) {
@@ -141,6 +145,7 @@ export class FsSsrServer implements SsrServer {
         unlinkSync(diff);
       }
     });
+    this.updateApprovedFile();
     this.refresh();
     return this.specShots();
   }
