@@ -9,6 +9,6 @@ npm i -g ng-spec-shot-reviewer
 cd <root-of-your-project-with-test-results>
 ng-spec-shot-reviewer
 ```
-then open your browser at [http://localhost:8090/ssr-en](http://localhost:8090/ssr-en)
+then open your browser at [http://localhost:8090/spec-shot-reviewer/en](http://localhost:8090/ssr-en)
 
 more description coming soon ...
