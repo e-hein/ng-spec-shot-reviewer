@@ -19,7 +19,9 @@ if (cfg.angularAppsFolder) {
     }
     const targetFolder = resolve(cfg.angularAppsFolder, distFolder);
     console.log(chalk.yellow(resourceFolder), 'serve static', ':', targetFolder);
-    app.use(resourceFolder, express.static(targetFolder));
+    app.use(resourceFolder, express.static(targetFolder), (req, res, next) => {
+      res.sendFile(targetFolder + '/index.html');
+    });
   });
 }
 
