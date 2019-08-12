@@ -6,6 +6,7 @@ export class SsrAppConfig {
   constructor(
     baseDir: string,
     public port = 8090,
+    public hostname = '0.0.0.0',
     public testPageUrl = '/express-test',
     public backendUrl = '/ssr-server',
     public reservedPathes = [testPageUrl, backendUrl],

@@ -1,9 +1,9 @@
-import { SsrServerConfig } from './server-config.model';
-import { SpecShot, SpecShotFile, SsrServer } from '../api';
-import { readdirSync, statSync, accessSync, writeFileSync, readFileSync, unlinkSync, copyFileSync,  } from 'fs';
-import { join as joinPath, relative as relativePath, resolve as absolutePath, dirname, basename } from 'path';
 import chalk from 'chalk';
-import { R_OK } from 'constants';
+import { copyFileSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'fs';
+import { join as joinPath, parse, relative as relativePath, resolve as absolutePath } from 'path';
+import { SpecShot, SpecShotFile, SpecShotFileType, specShotFileTypes, SsrServer } from '../api';
+import { SsrServerConfig } from './server-config.model';
+import { canReadFsNode, mkdirRecursive } from './utility.functions';
 
 export class FsSsrServer implements SsrServer {
   private _specShots: SpecShot[] = [];
@@ -15,32 +15,31 @@ export class FsSsrServer implements SsrServer {
   }
 
   public refresh(): void {
-    this._specShots = [];
-    this.scanForImages('actual');
-    this.scanForImages('diff');
-    this.scanForImages('baseline');
+    this.scanForAllImages();
+    this.loadApprovements();
+  }
 
-    const approvements = this.readApprovedFile();
+  private scanForAllImages() {
+    this._specShots = [];
+    specShotFileTypes.forEach((type) => this.scanForImages(type));
+  }
+
+  private loadApprovements() {
+    if (!canReadFsNode(this.cfg.approvedFilePath)) {
+      console.warn(chalk.yellow('WARN: did not found any approvements, yet'));
+      return [];
+    }
+
+    const approvements = JSON.parse(readFileSync(this.cfg.approvedFilePath, 'UTF-8')) as string[];
     this._specShots.forEach((specShot) => {
       specShot.approved = approvements.includes(specShot.id);
     })
   }
 
-  private readApprovedFile() {
-    try {
-      return JSON.parse(readFileSync(this.cfg.approvedFilePath, 'UTF-8')) as string[];
-    } catch (e) {
-      console.warn(chalk.yellow('WARN: did not found any approvements, yet'));
-      return [];
-    }
-  }
-
-  private scanForImages(type: 'actual' | 'diff' | 'baseline') {
+  private scanForImages(type: SpecShotFileType) {
     const baseDir = this.cfg.directories[type];
 
-    try {
-      accessSync(baseDir, R_OK);
-    } catch(e) {
+    if (!canReadFsNode(baseDir)) {
       console.warn(chalk.yellow(`WARN: no '${type}'-images found!`));
       return;
     }
@@ -48,9 +47,8 @@ export class FsSsrServer implements SsrServer {
     console.log('scan for images', baseDir);
     this.findSpecShots(baseDir)
       .forEach((specShotFile) => {
-        const fileDir = relativePath(baseDir, dirname(specShotFile.filename));
-        const fileName = basename(specShotFile.filename, '.png');
-        const id = encodeURIComponent(joinPath(fileDir, fileName));
+        const path = parse(relativePath(baseDir, specShotFile.filename));
+        const id = encodeURIComponent(joinPath(path.dir, path.name));
         specShotFile.filename = joinPath(type, relativePath(baseDir, specShotFile.filename));
         const specShot = this.getOrCreateSpecShot(id);
         specShot[type] = specShotFile;
@@ -134,6 +132,7 @@ export class FsSsrServer implements SsrServer {
         const actual = absolutePath(joinPath(this.cfg.directories.baseDir, actualFile.filename));
         const relative = relativePath(this.cfg.directories.actual, actual);
         const baseline = joinPath(this.cfg.directories.baseline, relative);
+        mkdirRecursive(this.cfg.directories.baseline);
         copyFileSync(actual, baseline);
         unlinkSync(actual);
       } else if (baselineFile) {

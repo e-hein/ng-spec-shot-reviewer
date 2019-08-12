@@ -4,6 +4,9 @@ export interface SpecShotFile {
   size: number;
 }
 
+export type SpecShotFileType = 'actual' | 'diff' | 'baseline';
+export const specShotFileTypes: SpecShotFileType[] = ['actual', 'diff', 'baseline'];
+
 export class SpecShot {
   public actual: SpecShotFile | false = false;
   public diff: SpecShotFile | false = false;

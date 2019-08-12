@@ -16,8 +16,10 @@
       "type": "node",
       "request": "launch",
       "name": "server",
-//      "cwd": "${workspaceFolder}/client",
-      "cwd": "/Users/ehein/Documents/dekra/professional/dekra-gwm-frontend2",
+      "env": {
+        "DEBUG_MODE": "true",
+      },
+      "cwd": "${workspaceFolder}/client",
       "program": "${workspaceFolder}/client/node_modules/.bin/ts-node",
       "args": [
         "-P",
