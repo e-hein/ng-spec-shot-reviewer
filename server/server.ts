@@ -48,9 +48,10 @@ export class FsSsrServer implements SsrServer {
     console.log('scan for images', baseDir);
     this.findSpecShots(baseDir)
       .forEach((specShotFile) => {
-        const fileDir = dirname(specShotFile.filename);
+        const fileDir = relativePath(baseDir, dirname(specShotFile.filename));
         const fileName = basename(specShotFile.filename, '.png');
-        const id = encodeURIComponent(relativePath(baseDir, joinPath(this.cfg.directories.baseDir, fileDir, fileName)));
+        const id = encodeURIComponent(joinPath(fileDir, fileName));
+        specShotFile.filename = joinPath(type, relativePath(baseDir, specShotFile.filename));
         const specShot = this.getOrCreateSpecShot(id);
         specShot[type] = specShotFile;
       });
@@ -76,7 +77,7 @@ export class FsSsrServer implements SsrServer {
         return stats.isDirectory()
           ? this.findSpecShots(entry)
           : this.foundSpecShot({
-            filename: relativePath(this.cfg.directories.baseDir, entry),
+            filename: entry,
             timestamp: stats.mtime.getTime(),
             size: stats.size,
            })

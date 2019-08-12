@@ -16,9 +16,14 @@
       "type": "node",
       "request": "launch",
       "name": "server",
-      "cwd": "${workspaceFolder}/client",
+//      "cwd": "${workspaceFolder}/client",
+      "cwd": "/Users/ehein/Documents/dekra/professional/dekra-gwm-frontend2",
       "program": "${workspaceFolder}/client/node_modules/.bin/ts-node",
-      "args": [ "-P", "../server/tsconfig.json", "../server/app.ts"]
+      "args": [
+        "-P",
+        "/Users/ehein/Documents/dev-intern/ng-spec-shot-reviewer/server/tsconfig.json",
+        "/Users/ehein/Documents/dev-intern/ng-spec-shot-reviewer/server/app.ts",
+      ]
     }
   ]
 }
