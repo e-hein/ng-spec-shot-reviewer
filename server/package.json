@@ -1,6 +1,6 @@
 {
   "name": "ng-spec-shot-reviewer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "combined server of spec shot reviewer backend and optionally multiple static websites (e.g. compiled angular apps)",
   "main": "app.js",
   "keywords": [
