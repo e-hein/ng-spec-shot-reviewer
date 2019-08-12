@@ -1,4 +1,4 @@
-import { RequestHandler, Router, static as serveStatic } from 'express';
+import { RequestHandler, Router, static as serveStatic, json } from 'express';
 import { SsrServerConfig } from './server-config.model';
 import { FsSsrServer } from './server';
 import * as cors from 'cors';
@@ -37,9 +37,9 @@ export class SsrEndpoint {
       }
       res.send(JSON.stringify(await this.server.specShots()));
     });
-    this.router.put('/applyApprovements', (req, res) => {
-      this.server.applyApprovements(req.body)
-        .then(() => res.sendStatus(200))
+    this.router.post('/applyApprovements', json(), (req, res) => {
+      this.server.applyApprovements(req.body.ids)
+        .then((updatedSpecShots) => res.send(updatedSpecShots))
         .catch((e) => res.send(e).sendStatus(400))
       ;
     })

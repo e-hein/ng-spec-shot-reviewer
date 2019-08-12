@@ -17,17 +17,20 @@ export class ReviewPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.backend.specShots().then((specShots) => {
-      this.specShots = specShots.filter((specShot) => false
-        || specShot.diff
-        || !specShot.baseline
-      );
-      this.countApprovements();
-    });
+    this.backend.specShots().then((specShots) => this.updateSpecShots(specShots));
+  }
+
+  private updateSpecShots(specShots: SpecShot[]) {
+    this.specShots = specShots.filter((specShot) => false
+      || specShot.diff
+      || !specShot.baseline
+    );
+    this.countApprovements();
   }
 
   public selectSpecShot(specShot) {
     this.selectedSpecShot = specShot;
+    console.log('selected spec shot', specShot);
   }
 
   public vote(approved: boolean) {
@@ -41,7 +44,8 @@ export class ReviewPageComponent implements OnInit {
   }
 
   public applyApprovements() {
-    this.backend.applyApprovements(this.approvedSpecShots.map(({id}) => id));
+    this.backend.applyApprovements(this.approvedSpecShots.map(({id}) => id))
+      .then((updatedSpecShots) => this.updateSpecShots(updatedSpecShots));
   }
 
   private get approvedSpecShots() {

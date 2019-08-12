@@ -116,18 +116,20 @@ export class FsSsrServer implements SsrServer {
   }
 
   public applyApprovements(ids: string[]) {
+    console.warn(chalk.green('applyApprovements'), ids);
     ids.forEach((id) => {
-      const specShot = this._specShots.find((specShot) => specShot.id === id);
-      if (!specShot) {
+      const specShotIndex = this._specShots.findIndex((specShot) => specShot.id === id);
+      if (specShotIndex < 0) {
         throw new Error(`spec shot with id ${id} not found`);
       }
+      const specShot = this._specShots.splice(specShotIndex, 1).pop();
       const actualFile = specShot.actual;
       const baselineFile = specShot.actual;
       if (actualFile) {
         const actual = absolutePath(joinPath(this.cfg.directories.baseDir, actualFile.filename));
         const relative = relativePath(this.cfg.directories.actual, actual);
         const baseline = joinPath(this.cfg.directories.baseline, relative);
-        copyFileSync(actual, relative);
+        copyFileSync(actual, baseline);
         unlinkSync(actual);
       } else if (baselineFile) {
         const baseline = absolutePath(joinPath(this.cfg.directories.baseDir, baselineFile.filename));
@@ -139,6 +141,7 @@ export class FsSsrServer implements SsrServer {
         unlinkSync(diff);
       }
     });
-    return Promise.resolve();
+    this.refresh();
+    return this.specShots();
   }
 }

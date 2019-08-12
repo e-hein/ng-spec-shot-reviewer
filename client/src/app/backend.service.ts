@@ -55,8 +55,8 @@ export class BackendService implements SsrServer {
 
   public applyApprovements(ids: string[]) {
     return this.http
-      .put(baseUrl + '/applyApprovements', JSON.stringify(ids), { responseType: 'text' })
-      .pipe(take(1)).toPromise().then(() => {})
+      .post<SpecShot[]>(baseUrl + '/applyApprovements', { ids })
+      .pipe(take(1)).toPromise()
     ;
   }
 }
