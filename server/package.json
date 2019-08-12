@@ -35,5 +35,9 @@
   ],
   "bin": {
     "ng-spec-shot-reviewer": "dist/run.js"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/e-hein/ng-spec-shot-reviewer.git"
   }
 }

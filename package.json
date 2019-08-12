@@ -15,7 +15,6 @@
   ],
   "author": "Emanuel Hein",
   "license": "MIT",
-  "private": true,
   "dependencies": {
     "ng-spec-shot-reviewer-client": "file:client",
     "ng-spec-shot-reviewer-server": "file:server"
@@ -23,5 +22,9 @@
   "bundledDependencies": [
     "ng-spec-shot-reviewer-client",
     "ng-spec-shot-reviewer-server"
-  ]
+  ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/e-hein/ng-spec-shot-reviewer.git"
+  }
 }
