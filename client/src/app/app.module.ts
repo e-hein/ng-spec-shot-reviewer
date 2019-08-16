@@ -9,6 +9,7 @@ import { PageLayoutComponent } from './page-layout/page-layout.component';
 import { ReviewPageComponent } from './review-page/review-page.component';
 import { SpecShotDetailsComponent } from './spec-shot-details/spec-shot-details.component';
 import { SpecShotListComponent } from './spec-shot-list/spec-shot-list.component';
+import { ReviewOverviewPageComponent } from './review-overview-page/review-overview-page.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { SpecShotListComponent } from './spec-shot-list/spec-shot-list.component
     ReviewPageComponent,
     PageLayoutComponent,
     SpecShotDetailsComponent,
+    ReviewOverviewPageComponent,
   ],
   imports: [
     BrowserModule,
