@@ -25,7 +25,6 @@ class DummySpecShotDetailsComponent extends SpecShotDetailsComponent {}
 describe('ReviewPageComponent', () => {
   let component: ReviewPageComponent;
   let fixture: ComponentFixture<ReviewPageComponent>;
-  const whenAllChangesDone = () => whenAllChangesDoneFor(fixture);
   let testData: SpecShot[];
   let backend: BackendService;
 
@@ -43,6 +42,7 @@ describe('ReviewPageComponent', () => {
         specShots: () => Promise.resolve(testData),
         approve: (_id: string) => Promise.resolve(),
         disapprove: (_id: string) => Promise.resolve(),
+        applyApprovements: (_ids: string[]) => Promise.resolve(testData),
       } as BackendService },
     ]
   })
@@ -59,38 +59,6 @@ describe('ReviewPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  function findSpecShotDetails(): DummySpecShotDetailsComponent {
-    const specShotDetails = fixture.debugElement.query(By.directive(DummySpecShotDetailsComponent));
-    if (!specShotDetails) {
-      throw new Error('spec shot details not found');
-    }
-    return specShotDetails.componentInstance;
-  }
-
-  function findSpecShotList(): DummySpecShotListComponent {
-    const specShotList = fixture.debugElement.query(By.directive(DummySpecShotListComponent));
-    if (!specShotList) {
-      throw new Error('spec shot list not found');
-    }
-    return specShotList.componentInstance;
-  }
-
-  async function selectSpecShot(specShotToSelect: SpecShot) {
-    const specShotList = findSpecShotList();
-    if (!specShotList.specShots.some((specShot) => specShot.id === specShotToSelect.id)) {
-      throw new Error('spec shot not in list');
-    }
-
-    specShotList.select.emit(specShotToSelect);
-    await whenAllChangesDone();
-  }
-
-  async function vorForSpecShot(vote: boolean) {
-    const specShotDetails = findSpecShotDetails();
-    specShotDetails.vote.emit(vote);
-    await whenAllChangesDone();
-  }
 
   it(
     'should contain a spec shot list',
@@ -121,7 +89,7 @@ describe('ReviewPageComponent', () => {
       const approveSpy = spyOn(backend, 'approve').and.returnValue(Promise.resolve());
 
       // when
-      await vorForSpecShot(true);
+      await voteForSpecShot(true);
 
       // then
       expect(approveSpy).toHaveBeenCalledWith(specShotToVoteFor.id);
@@ -137,10 +105,128 @@ describe('ReviewPageComponent', () => {
       const approveSpy = spyOn(backend, 'disapprove').and.returnValue(Promise.resolve());
 
       // when
-      await vorForSpecShot(false);
+      await voteForSpecShot(false);
 
       // then
       expect(approveSpy).toHaveBeenCalledWith(specShotToVoteFor.id);
     }
   );
+
+  it(
+    'when voted then it should select next specshot',
+    async () => {
+      // given
+      const specShotToVoteFor = testData[0];
+      await selectSpecShot(specShotToVoteFor);
+      spyOn(backend, 'disapprove').and.returnValue(Promise.resolve());
+
+      // when
+      await voteForSpecShot(false);
+
+      // then
+      const specShotDetails = findSpecShotDetails();
+      expect(specShotDetails.specShot.id).toBe(testData[1].id);
+    }
+  );
+
+  it(
+    'when the last spec shot gets voted then it should show spec shot list again',
+    async () => {
+      // given
+      const specShotToVoteFor = testData[testData.length - 1];
+      await selectSpecShot(specShotToVoteFor);
+      spyOn(backend, 'disapprove').and.returnValue(Promise.resolve());
+
+      // when
+      await voteForSpecShot(false);
+
+      // then
+      expect(() => findSpecShotList()).not.toThrow();
+      expect(() => findSpecShotDetails()).toThrow();
+    }
+  );
+
+  it(
+    'when apply approvements then should update spec shot list',
+    async () => {
+      // given
+      const updatedTestData = testData.slice();
+      const specShotToVoteFor = updatedTestData.shift();
+      spyOn(backend, 'applyApprovements').and.returnValue(Promise.resolve(updatedTestData));
+      spyOn(backend, 'approve').and.returnValue(Promise.resolve());
+
+      // when
+      await selectSpecShot(specShotToVoteFor);
+      await voteForSpecShot(true);
+      await applyApprovements();
+
+      // then
+      expect(component.specShots).toEqual(updatedTestData);
+    }
+  )
+
+  it(
+    'when apply approvement for selected spec shot then it should hide spec shot details',
+    async () => {
+      // given
+      const updatedTestData = testData.slice();
+      const specShotToVoteFor = updatedTestData.shift();
+      spyOn(backend, 'applyApprovements').and.returnValue(Promise.resolve(updatedTestData));
+      spyOn(backend, 'approve').and.returnValue(Promise.resolve());
+
+      // when
+      await selectSpecShot(specShotToVoteFor);
+      await voteForSpecShot(true);
+      await selectSpecShot(specShotToVoteFor);
+      await applyApprovements();
+
+      // then
+      expect(() => findSpecShotDetails()).toThrow();
+    }
+  )
+
+  async function whenAllChangesDone() {
+    await whenAllChangesDoneFor(fixture);
+  }
+
+  function findSpecShotDetails(): DummySpecShotDetailsComponent {
+    const specShotDetails = fixture.debugElement.query(By.directive(DummySpecShotDetailsComponent));
+    if (!specShotDetails) {
+      throw new Error('spec shot details not found');
+    }
+    return specShotDetails.componentInstance;
+  }
+
+  function findSpecShotList(): DummySpecShotListComponent {
+    const specShotList = fixture.debugElement.query(By.directive(DummySpecShotListComponent));
+    if (!specShotList) {
+      throw new Error('spec shot list not found');
+    }
+    return specShotList.componentInstance;
+  }
+
+  async function selectSpecShot(specShotToSelect: SpecShot) {
+    const specShotList = findSpecShotList();
+    if (!specShotList.specShots.some((specShot) => specShot.id === specShotToSelect.id)) {
+      throw new Error('spec shot not in list');
+    }
+
+    specShotList.select.emit(specShotToSelect);
+    await whenAllChangesDone();
+  }
+
+  async function voteForSpecShot(vote: boolean) {
+    const specShotDetails = findSpecShotDetails();
+    specShotDetails.vote.emit(vote);
+    await whenAllChangesDone();
+  }
+
+  async function applyApprovements() {
+    const applyButton = fixture.debugElement.queryAll(By.css('button')).find((button) => button.nativeElement.innerText.includes('apply'));
+    if (!applyButton) {
+      throw new Error('apply button not found');
+    }
+    applyButton.nativeElement.click();
+    await whenAllChangesDone();
+  }
 });

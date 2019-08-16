@@ -1,4 +1,7 @@
-import { SpecShot } from 'api';
+import { SpecShot, SpecShotFile } from 'api';
+
+export const useDefault = undefined;
+export const doNotSet = null;
 
 function simpleHashFrom(text: string, max = 1000) {
   return Array.from(text).reduce((sum, char, i) => sum + char.charCodeAt(0) * i, 0) % max;
@@ -12,16 +15,27 @@ export function createSpecShotFile(filename: string) {
   }
 }
 
-export function createSpecShot(id: string) {
+export function createSpecShot(
+  id: string,
+  title = id + ' title',
+  actual: SpecShotFile | typeof doNotSet = createSpecShotFile('actual-' + id),
+  diff: SpecShotFile | typeof doNotSet = createSpecShotFile('diff-' + id),
+  baseline: SpecShotFile | typeof doNotSet = createSpecShotFile('baseline-' + id),
+) {
   return {
     id,
-    title: id + ' title',
-    actual: createSpecShotFile('actual-' + id),
-    diff: createSpecShotFile('diff-' + id),
-    baseline: createSpecShotFile('baseline-' + id),
+    title,
+    actual: actual === doNotSet ? undefined : actual,
+    diff: actual === doNotSet ? undefined : diff,
+    baseline: actual === doNotSet ? undefined : baseline,
   } as SpecShot;
 }
 
 export function createSpecShotList(count = 3) {
-  return new Array(count).fill(true).map((_, i) => createSpecShot('#' + i));
+  return new Array(count).fill(true).map((_, i) => createSpecShot(
+    '#' + i, useDefault,
+    i % 2 > 0 ? useDefault : doNotSet,
+    i % 3 > 0 ? useDefault : doNotSet,
+    i % 4 > 0 ? useDefault : doNotSet,
+  ));
 }

@@ -45,9 +45,7 @@ export class ReviewPageComponent implements OnInit {
     );
     this.countApprovements();
     const index = this.specShots.indexOf(this.selectedSpecShot);
-    if (index < this.specShots.length - 1) {
-      this.selectedSpecShot = this.specShots[index + 1];
-    }
+    this.selectedSpecShot = this.specShots[index + 1];
   }
 
   public applyApprovements() {
