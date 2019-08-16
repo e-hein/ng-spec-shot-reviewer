@@ -21,6 +21,7 @@ export function createSpecShot(
   actual: SpecShotFile | typeof doNotSet = createSpecShotFile('actual-' + id),
   diff: SpecShotFile | typeof doNotSet = createSpecShotFile('diff-' + id),
   baseline: SpecShotFile | typeof doNotSet = createSpecShotFile('baseline-' + id),
+  approved = false
 ) {
   return {
     id,
@@ -28,14 +29,16 @@ export function createSpecShot(
     actual: actual === doNotSet ? undefined : actual,
     diff: actual === doNotSet ? undefined : diff,
     baseline: actual === doNotSet ? undefined : baseline,
+    approved,
   } as SpecShot;
 }
 
-export function createSpecShotList(count = 3) {
+export function createSpecShotList(count = 10) {
   return new Array(count).fill(true).map((_, i) => createSpecShot(
     '#' + i, useDefault,
     i % 2 > 0 ? useDefault : doNotSet,
     i % 3 > 0 ? useDefault : doNotSet,
     i % 4 > 0 ? useDefault : doNotSet,
+    i % 5 > 0,
   ));
 }

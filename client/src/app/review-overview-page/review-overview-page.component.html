@@ -1,1 +1,2 @@
-<p>review-overview-page works!</p>
+<ssr-spec-shot-list [specShots]="specShots" *ngIf="specShots" (select)="routeTo($event)"></ssr-spec-shot-list>
+<button mat-raised-button (click)="applyApprovements()" *ngIf="approvedCount > 0">apply {{approvedCount}} approvements</button>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BackendService } from './backend.service';
 import { LoadableClientDataState } from 'utils';
+import { BackendService } from './backend.service';
 
 @Injectable({
   providedIn: 'root',
