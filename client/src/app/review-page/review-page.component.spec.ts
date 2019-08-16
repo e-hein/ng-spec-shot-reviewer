@@ -1,27 +1,49 @@
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SpecShot } from 'api';
-import { of as observableOf } from 'rxjs';
+import { whenAllChangesDoneFor } from 'utils/testing/common.functions';
+import { createSpecShotList } from 'utils/testing/spec-shot.test-data';
+import { BackendService } from '../backend.service';
 import { PageLayoutComponent } from '../page-layout/page-layout.component';
 import { SpecShotDetailsComponent } from '../spec-shot-details/spec-shot-details.component';
 import { SpecShotListComponent } from '../spec-shot-list/spec-shot-list.component';
 import { ReviewPageComponent } from './review-page.component';
 
-fdescribe('ReviewPageComponent', () => {
+@Component({
+  selector: 'ssr-spec-shot-list',
+  template: 'dummy spec shot list',
+})
+class DummySpecShotListComponent extends SpecShotListComponent {}
+
+@Component({
+  selector: 'ssr-spec-shot-details',
+  template: 'dummy spec shot details'
+})
+class DummySpecShotDetailsComponent extends SpecShotDetailsComponent {}
+
+describe('ReviewPageComponent', () => {
   let component: ReviewPageComponent;
   let fixture: ComponentFixture<ReviewPageComponent>;
-  let http: HttpClient;
+  const whenAllChangesDone = () => whenAllChangesDoneFor(fixture);
+  let testData: SpecShot[];
+  let backend: BackendService;
+
+  beforeEach(() => testData = createSpecShotList())
 
   beforeEach(async(() => TestBed.configureTestingModule({
     declarations: [
       ReviewPageComponent,
       PageLayoutComponent,
-      SpecShotListComponent,
-      SpecShotDetailsComponent,
+      DummySpecShotListComponent,
+      DummySpecShotDetailsComponent,
     ],
     providers: [
-      { provide: HttpClient, useValue: { get: () => {} } },
+      { provide: BackendService, useValue: {
+        specShots: () => Promise.resolve(testData),
+        approve: (_id: string) => Promise.resolve(),
+        disapprove: (_id: string) => Promise.resolve(),
+      } as BackendService },
     ]
   })
   .compileComponents()));
@@ -29,84 +51,96 @@ fdescribe('ReviewPageComponent', () => {
   beforeEach(async () => {
     fixture = TestBed.createComponent(ReviewPageComponent);
     component = fixture.componentInstance;
-    http = fixture.debugElement.injector.get(HttpClient);
-    spyOn(http, 'get').and.returnValue(observableOf([
-      {
-        id:'desktop_chrome/review-page-fhdtv-de-1920x1080',
-        actual: {
-          filename: 'actual/desktop_chrome/review-page-fhdtv-de-1920x1080.png',
-          timestamp:1565541845139,
-          size: 80150,
-        },
-        diff: {
-          filename: 'diff/desktop_chrome/review-page-fhdtv-de-1920x1080.png',
-          timestamp: 1565541845668,
-          size: 24125,
-        },
-        baseline: {
-          filename: 'baseline/desktop_chrome/review-page-fhdtv-de-1920x1080.png',
-          timestamp: 1565527812480,
-          size: 14719,
-        },
-        approved: false,
-      },
-      {
-        id: 'desktop_chrome/review-page-fhdtv-en-1920x1080',
-        actual: {
-          filename: 'actual/desktop_chrome/review-page-fhdtv-en-1920x1080.png',
-          timestamp: 1565541860803,
-          size: 79526,
-        },
-        diff: false,
-        baseline: false,
-        approved: false,
-      },
-    ] as SpecShot[]))
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-    await fixture.whenStable();
+    backend = fixture.debugElement.injector.get(BackendService);
+    spyOn(backend, 'specShots').and.returnValue(Promise.resolve(testData));
+    await whenAllChangesDone();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  function findSpecShotLinkByIndex(num: number) {
-    const detailLink = fixture.debugElement.query(By.css(`ssr-spec-shot-list li:nth-of-type(${num + 1}) a`));
-    if (!detailLink) {
-      throw new Error(`detail link number ${num} not found`);
-    }
-    return detailLink;
-  }
-
-  async function clickOnDetailLink(num: number) {
-    const detailLink = findSpecShotLinkByIndex(num);
-    detailLink.nativeElement.click();
-    fixture.autoDetectChanges(true);
-    await fixture.whenStable();
-    fixture.autoDetectChanges(false);
-  }
-
-  function findSpecShotDetails() {
-    const specShotDetails = fixture.debugElement.query(By.css('ssr-spec-shot-details'));
+  function findSpecShotDetails(): DummySpecShotDetailsComponent {
+    const specShotDetails = fixture.debugElement.query(By.directive(DummySpecShotDetailsComponent));
     if (!specShotDetails) {
       throw new Error('spec shot details not found');
     }
-    return specShotDetails;
+    return specShotDetails.componentInstance;
+  }
+
+  function findSpecShotList(): DummySpecShotListComponent {
+    const specShotList = fixture.debugElement.query(By.directive(DummySpecShotListComponent));
+    if (!specShotList) {
+      throw new Error('spec shot list not found');
+    }
+    return specShotList.componentInstance;
+  }
+
+  async function selectSpecShot(specShotToSelect: SpecShot) {
+    const specShotList = findSpecShotList();
+    if (!specShotList.specShots.some((specShot) => specShot.id === specShotToSelect.id)) {
+      throw new Error('spec shot not in list');
+    }
+
+    specShotList.select.emit(specShotToSelect);
+    await whenAllChangesDone();
+  }
+
+  async function vorForSpecShot(vote: boolean) {
+    const specShotDetails = findSpecShotDetails();
+    specShotDetails.vote.emit(vote);
+    await whenAllChangesDone();
   }
 
   it(
-    'should contain an detail link',
-    () => expect(() => findSpecShotLinkByIndex(0)).not.toThrow(),
+    'should contain a spec shot list',
+    () => expect(() => findSpecShotList()).not.toThrow(),
   );
 
   it(
-    'when clicked on detail link should show details',
+    'when spec shot selected in spec shot list then it should it\'s show details',
     async () => {
-      await clickOnDetailLink(0);
+      // given
+      const specShotToSelect = testData[0];
 
-      expect(() => findSpecShotDetails()).not.toThrow();
+      // when
+      await selectSpecShot(specShotToSelect);
+
+      // then
+      const specShotDetails = findSpecShotDetails();
+      expect(specShotDetails.specShot.id).toBe(specShotToSelect.id);
     }
-  )
+  );
+
+  it(
+    'when voted true for an spec shot then it should send approvement to backend',
+    async () => {
+      // given
+      const specShotToVoteFor = testData[0];
+      await selectSpecShot(specShotToVoteFor);
+      const approveSpy = spyOn(backend, 'approve').and.returnValue(Promise.resolve());
+
+      // when
+      await vorForSpecShot(true);
+
+      // then
+      expect(approveSpy).toHaveBeenCalledWith(specShotToVoteFor.id);
+    }
+  );
+
+  it(
+    'when voted false for an spec shot then it should send disapprovement to backend',
+    async () => {
+      // given
+      const specShotToVoteFor = testData[0];
+      await selectSpecShot(specShotToVoteFor);
+      const approveSpy = spyOn(backend, 'disapprove').and.returnValue(Promise.resolve());
+
+      // when
+      await vorForSpecShot(false);
+
+      // then
+      expect(approveSpy).toHaveBeenCalledWith(specShotToVoteFor.id);
+    }
+  );
 });

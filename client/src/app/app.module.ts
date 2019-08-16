@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCardModule, MatIconModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
+import { appModulesBundles } from './app-module-bundles';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
@@ -17,15 +17,13 @@ import { SpecShotListComponent } from './spec-shot-list/spec-shot-list.component
     SpecShotListComponent,
     ReviewPageComponent,
     PageLayoutComponent,
-    SpecShotDetailsComponent
+    SpecShotDetailsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
     HttpClientModule,
+    ...appModulesBundles.material,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpecShotDetailsComponent } from './spec-shot-details.component';
+import { appModulesBundles } from '../app-module-bundles';
+import { createSpecShot } from 'src/utils/testing/spec-shot.test-data';
 
 describe('SpecShotDetailsComponent', () => {
   let component: SpecShotDetailsComponent;
@@ -8,6 +10,9 @@ describe('SpecShotDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        ...appModulesBundles.material,
+      ],
       declarations: [ SpecShotDetailsComponent ]
     })
     .compileComponents();
@@ -16,6 +21,7 @@ describe('SpecShotDetailsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SpecShotDetailsComponent);
     component = fixture.componentInstance;
+    component.specShot = createSpecShot('test');
     fixture.detectChanges();
   });
 
