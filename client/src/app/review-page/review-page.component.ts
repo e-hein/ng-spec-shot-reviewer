@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SpecShot } from 'api';
 import { BackendService } from '../backend.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ssr-review-page',
   templateUrl: './review-page.component.html',
   styleUrls: ['./review-page.component.sass']
@@ -14,10 +15,14 @@ export class ReviewPageComponent implements OnInit {
 
   constructor(
     private backend: BackendService,
-  ) { }
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
-  ngOnInit() {
-    this.backend.specShots().then((specShots) => this.updateSpecShots(specShots));
+  public ngOnInit() {
+    this.backend.specShots().then((specShots) => {
+      this.updateSpecShots(specShots);
+      this.changeDetectorRef.markForCheck();
+    });
   }
 
   private updateSpecShots(specShots: SpecShot[]) {
@@ -49,8 +54,13 @@ export class ReviewPageComponent implements OnInit {
   }
 
   public applyApprovements() {
-    this.backend.applyApprovements(this.approvedSpecShots.map(({id}) => id))
-      .then((updatedSpecShots) => this.updateSpecShots(updatedSpecShots));
+    this.backend
+      .applyApprovements(this.approvedSpecShots.map(({id}) => id))
+      .then((updatedSpecShots) => {
+        this.updateSpecShots(updatedSpecShots);
+        this.changeDetectorRef.markForCheck();
+      })
+    ;
   }
 
   private get approvedSpecShots() {
