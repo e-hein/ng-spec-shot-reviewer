@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, TrackByFunction } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TrackByFunction } from '@angular/core';
 import { SpecShot } from 'api';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ssr-spec-shot-list',
   templateUrl: './spec-shot-list.component.html',
   styleUrls: ['./spec-shot-list.component.sass']

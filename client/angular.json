@@ -125,6 +125,12 @@
           }
         }
       }
-    }},
-  "defaultProject": "ng-spec-shot-reviewer"
+    }
+  },
+  "defaultProject": "ng-spec-shot-reviewer",
+  "schematics": {
+    "@schematics/angular:component": {
+      "changeDetection": "OnPush"
+    }
+  }
 }

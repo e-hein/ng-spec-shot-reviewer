@@ -24,7 +24,7 @@ describe('workspace-project App', () => {
 
         it('should select spec shot', async () => {
           await ReviewPage.selectSpecShotByIndex(0);
-          expect(await browser.imageComparison.checkFullPageScreen('review-page-details' + screensize.title, { /* some options*/ })).toEqual(0);
+          expect(await browser.imageComparison.checkFullPageScreen('review-page-details-' + screensize.title, { /* some options*/ })).toEqual(0);
         })
       })
 

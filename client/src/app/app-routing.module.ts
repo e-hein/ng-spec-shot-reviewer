@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomePageComponent } from './home-page/home-page.component';
+import { reviewRoute } from './review/review.routes';
 import { ReviewPageComponent } from './review-page/review-page.component';
 
 
@@ -12,7 +13,8 @@ const routes: Routes = [
   {
     path: 'review',
     component: ReviewPageComponent,
-  }
+    children: reviewRoute.children,
+  },
 ];
 
 @NgModule({
