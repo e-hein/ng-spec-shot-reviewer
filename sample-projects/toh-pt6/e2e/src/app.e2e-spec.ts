@@ -47,6 +47,7 @@ class Hero {
 describe('Tutorial part 6', () => {
 
   beforeAll(async () => {
+    browser.driver.manage().window().setSize(500, 1024);
     browser.get('');
   });
 
@@ -93,6 +94,10 @@ describe('Tutorial part 6', () => {
       expect(page.appDashboard.isPresent()).toBeTruthy();
     });
 
+    it(`shouldn't have changed since last review`, async () => {
+      // Check a full page screens
+      expect(await browser.imageComparison.checkFullPageScreen('dashboard-initial', { /* some options*/ })).toEqual(0);
+    })
   });
 
   describe('Dashboard tests', () => {
@@ -106,9 +111,17 @@ describe('Tutorial part 6', () => {
 
     it(`selects and routes to ${targetHero.name} details`, dashboardSelectTargetHero);
 
+    it(`heroes details shouldn't have changed since last review`, async () => {
+      expect(await browser.imageComparison.checkFullPageScreen('hero-details-initial')).toEqual(0);
+    })
+
     it(`updates hero name (${newHeroName}) in details view`, updateHeroNameInDetailView);
 
-    it(`cancels and shows ${targetHero.name} in Dashboard`, () => {
+    it(`heroes details after updating the name shouldn't have changed since last review`, async () => {
+      expect(await browser.imageComparison.checkFullPageScreen('hero-details-after-rename')).toEqual(0);
+    })
+
+    it(`cancels and shows ${targetHero.name} in Dashboard`, async () => {
       element(by.buttonText('go back')).click();
       browser.waitForAngular(); // seems necessary to gets tests to pass for toh-pt6
 
@@ -128,6 +141,9 @@ describe('Tutorial part 6', () => {
       expect(targetHeroElt.getText()).toEqual(newHeroName);
     });
 
+    it(`dashboard with new name shouldn't have changed since last review`, async () => {
+      expect(await browser.imageComparison.checkFullPageScreen('dashboard-after-rename')).toEqual(0);
+    })
   });
 
   describe('Heroes tests', () => {
@@ -140,6 +156,12 @@ describe('Tutorial part 6', () => {
       expect(page.appHeroes.isPresent()).toBeTruthy();
       expect(page.allHeroes.count()).toEqual(10, 'number of heroes');
     });
+
+    it(`Heroes view didn't change since last review`, async () => {
+      getPageElts().appHeroesHref.click();
+
+      expect(await browser.imageComparison.checkFullPageScreen('heroes-view')).toEqual(0);
+    })
 
     it('can route to hero details', async () => {
       getHeroLiEltById(targetHero.id).click();
@@ -194,6 +216,7 @@ describe('Tutorial part 6', () => {
     });
 
     it('displays correctly styled buttons', async () => {
+      expect(await browser.imageComparison.checkElement(element.all(by.buttonText('x')).first(), 'button-style-x')).toEqual(0);
       element.all(by.buttonText('x')).then(buttons => {
         for (const button of buttons) {
           // Inherited styles from styles.css
@@ -208,6 +231,7 @@ describe('Tutorial part 6', () => {
       });
 
       const addButton = element(by.buttonText('add'));
+      expect(await browser.imageComparison.checkElement(addButton, 'button-style-add')).toEqual(0);
       // Inherited styles from styles.css
       expect(addButton.getCssValue('font-family')).toBe('Arial');
       expect(addButton.getCssValue('border')).toContain('none');
