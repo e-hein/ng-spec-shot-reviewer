@@ -1,14 +1,12 @@
+import { Injectable } from '@angular/core';
 import { SpecShot } from 'api';
 import { ReplaySubject } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { BackendService } from './backend.service';
 
+@Injectable()
 export class MockedBackendService extends BackendService {
-  constructor(
-    private specShots$r = new ReplaySubject<SpecShot[]>(1),
-  ) {
-    super();
-  }
+  private specShots$r = new ReplaySubject<SpecShot[]>(1);
 
   public sendSpecShots(specShots: SpecShot[]) {
     this.specShots$r.next(specShots);
