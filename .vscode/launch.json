@@ -7,6 +7,14 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "toh6 protractor",
+      "cwd": "${workspaceFolder}/sample-projects/toh-pt6",
+      "program": "${workspaceFolder}/sample-projects/toh-pt6/node_modules/.bin/protractor",
+      "args": [ "${workspaceFolder}/sample-projects/toh-pt6/e2e/protractor.conf.js" ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "protractor en",
       "cwd": "${workspaceFolder}/client",
       "program": "${workspaceFolder}/client/node_modules/.bin/protractor",

@@ -46,7 +46,9 @@ class Hero {
 
 describe('Tutorial part 6', () => {
 
-  beforeAll(() => browser.get(''));
+  beforeAll(async () => {
+    browser.get('');
+  });
 
   function getPageElts() {
     let navElts = element.all(by.css('app-root nav a'));

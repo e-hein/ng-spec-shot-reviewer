@@ -9,7 +9,11 @@
     "test": "ng test",
     "build": "ng build --prod",
     "e2e": "ng e2e",
-    "ng": "ng"
+    "ng": "ng",
+    "update-webdriver": "webdriver-manager update",
+    "preprotractor": "npm run update-webdriver",
+    "protractor": "protractor e2e/protractor.conf.js",
+    "review": "ng-spec-shot-reviewer"
   },
   "keywords": [],
   "author": "",
@@ -45,7 +49,9 @@
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "lodash": "^4.16.2",
+    "ng-spec-shot-reviewer": "^1.0.2",
     "protractor": "~5.4.0",
+    "protractor-image-comparison": "^3.3.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
