@@ -18,7 +18,7 @@ exports.config = {
     'logName': 'en'
   },
   directConnect: true,
-  baseUrl: 'http://localhost:8090/ssr-en',
+  baseUrl: 'http://localhost:8090/spec-shot-reviewer/en',
   framework: 'jasmine',
   plugins: [
     {
