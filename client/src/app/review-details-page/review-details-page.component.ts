@@ -4,6 +4,7 @@ import { SpecShot } from 'api';
 import { switchMap } from 'rxjs/operators';
 import { SubscriptionCollection } from 'utils';
 import { ReviewService } from '../review/review.service';
+import { ReviewNavigationService } from '../review/review-navigation.service';
 
 @Component({
   selector: 'ssr-review-details-page',
@@ -18,6 +19,7 @@ export class ReviewDetailsPageComponent implements OnInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private reviewService: ReviewService,
+    private navigate: ReviewNavigationService,
   ) {}
 
   public ngOnInit(): void {
@@ -31,11 +33,9 @@ export class ReviewDetailsPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  public vote(approved: boolean) {
-    (approved
-      ? this.reviewService.approve(this.specShot.id)
-      : this.reviewService.disapprove(this.specShot.id)
-    );
+  public async vote(approved: boolean) {
+    await this.reviewService[approved ? 'approve' : 'disapprove'](this.specShot.id);
+    this.navigate.toNextSpecShot(this.specShot.id);
   }
 
   public ngOnDestroy(): void {

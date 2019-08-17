@@ -27,12 +27,4 @@ describe('ReviewPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it(
-    'when voted then it should select next specshot',
-  );
-
-  it(
-    'when the last spec shot gets voted then it should show spec shot list again',
-  );
 });

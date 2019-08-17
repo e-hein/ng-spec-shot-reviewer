@@ -40,14 +40,14 @@ export class ReviewService {
     );
   }
 
-  public approve(specShotId: string) {
+  public async approve(specShotId: string) {
     this.voteClientSide(specShotId, true);
-    this.backendService.approve(specShotId);
+    await this.backendService.approve(specShotId);
   }
 
-  public disapprove(specShotId: string) {
+  public async disapprove(specShotId: string) {
     this.voteClientSide(specShotId, false);
-    this.backendService.disapprove(specShotId);
+    await this.backendService.disapprove(specShotId);
   }
 
   private async voteClientSide(specShotId: string, vote: boolean) {

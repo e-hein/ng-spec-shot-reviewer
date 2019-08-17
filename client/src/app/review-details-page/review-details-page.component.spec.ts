@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SpecShot } from 'api';
 import { BehaviorSubject } from 'rxjs';
@@ -74,7 +74,7 @@ describe('ReviewDetailsPageComponent', () => {
     await whenAllChangesDone();
 
     expect(approveSpy).toHaveBeenCalledWith(specShotId);
-  })
+  });
 
   it('should forward disapprovements', async () => {
     const approveSpy = spyOn(mockedBackendService, 'disapprove').and.callThrough();
@@ -84,7 +84,51 @@ describe('ReviewDetailsPageComponent', () => {
     await whenAllChangesDone();
 
     expect(approveSpy).toHaveBeenCalledWith(specShotId);
-  })
+  });
+
+  it ('should navigate to next spec shot after vote', async () => {
+    // given
+    const router: Router = fixture.debugElement.injector.get(Router);
+    const navigationSpy = spyOn(router, 'navigate').and.callFake(async (args) => {
+      routeParams$b.next({ specShotId: args[1] });
+      return true;
+    });
+    const specShotDetails = findSpecShotDetails();
+    if (specShotDetails.specShot.id !== testData[0].id) {
+      throw new Error('did not show expected initial spec shot');
+    }
+
+    // when
+    findSpecShotDetails().vote.emit(false);
+    await whenAllChangesDone();
+    await whenAllChangesDone();
+
+    // then
+    expect(navigationSpy).toHaveBeenCalledWith([jasmine.anything(), testData[1].id]);
+    expect(component.specShot.id).toBe(testData[1].id, 'component not updated');
+    expect(findSpecShotDetails().specShot.id).toBe(testData[1].id, 'child not updated');
+  });
+
+  it ('should navigate to index after last vote', async () => {
+    // given
+    const lastSpecShotId = testData[testData.length -1].id;
+    routeParams$b.next({ specShotId: lastSpecShotId });
+    await whenAllChangesDone();
+
+    const router: Router = fixture.debugElement.injector.get(Router);
+    const navigationSpy = spyOn(router, 'navigate').and.returnValue(Promise.resolve(false));
+    const specShotDetails = findSpecShotDetails();
+    if (specShotDetails.specShot.id !== lastSpecShotId) {
+      throw new Error('did not show expected initial spec shot');
+    }
+
+    // when
+    specShotDetails.vote.emit(false);
+    await whenAllChangesDone();
+
+    // then
+    expect(navigationSpy).toHaveBeenCalledWith(['review']);
+  });
 
   async function whenAllChangesDone() {
     await whenAllChangesDoneFor(fixture);
