@@ -24,7 +24,6 @@ export class ReviewService {
     return this.clientState.specShots.asObservable().pipe(
       map((specShots) => specShots.filter((specShot) => false
         || specShot.diff
-        || !specShot.actual
         || !specShot.baseline
       )),
       publishReplay(1),
