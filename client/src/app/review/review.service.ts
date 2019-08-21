@@ -22,11 +22,15 @@ export class ReviewService {
 
   private setupSpecShotsObservable() {
     return this.clientState.specShots.asObservable().pipe(
-      map((specShots) => specShots.filter((specShot) => false
-        || specShot.diff
-        || !specShot.actual
-        || !specShot.baseline
-      )),
+      map((specShots) => specShots
+        .filter((specShot): specShot is SpecShot & { actual: SpecShotFile } =>
+          !!specShot.actual && (false
+            || !!specShot.diff
+            || !specShot.baseline
+          )
+        , )
+        .sort((a, b) => a.actual.timestamp - b.actual.timestamp)
+      ),
       publishReplay(1),
       refCount(),
     );
