@@ -9,7 +9,7 @@ import { SpecShotListComponent } from './spec-shot-list.component';
 
 export const specShotListCss = {
   link: (num: number) => `ssr-spec-shot-list li:nth-of-type(${num + 1}) a`,
-}
+};
 
 export class SpecShotListRemote {
   constructor(
@@ -83,5 +83,5 @@ describe('SpecShotListComponent', () => {
 
       expect(selectionSpy).toHaveBeenCalledWith(testData[0]);
     }
-  )
+  );
 });

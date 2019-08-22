@@ -66,6 +66,6 @@ describe('review service', () => {
       expect(specShots.length).toBeGreaterThan(0);
       expect(specShots.length).toBeLessThan(testData.length);
       expect(specShots).not.toContain(jasmine.objectContaining({ approved: false}));
-    })
-  })
-})
+    });
+  });
+});

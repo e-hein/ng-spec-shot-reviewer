@@ -20,7 +20,7 @@ export class XhrBackendService extends BackendService {
     return this.http.get<SpecShot[]>(baseUrl + '/spec-shot').pipe(
       take(1),
       map((specShots) => this.addBaseUrls(specShots)),
-    ).toPromise()
+    ).toPromise();
   }
 
   private addBaseUrls(specShots: SpecShot[]) {
@@ -40,7 +40,7 @@ export class XhrBackendService extends BackendService {
     return {
       ...specShotFile,
       filename: baseUrl + '/image/' + specShotFile.filename,
-    }
+    };
   }
 
   public approve(id: string) {

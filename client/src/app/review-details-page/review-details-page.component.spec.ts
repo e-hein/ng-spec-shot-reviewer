@@ -111,7 +111,7 @@ describe('ReviewDetailsPageComponent', () => {
 
   it ('should navigate to index after last vote', async () => {
     // given
-    const lastSpecShotId = testData[testData.length -1].id;
+    const lastSpecShotId = testData[testData.length - 1].id;
     routeParams$b.next({ specShotId: lastSpecShotId });
     await whenAllChangesDone();
 

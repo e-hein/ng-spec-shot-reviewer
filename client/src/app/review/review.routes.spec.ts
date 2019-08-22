@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -60,18 +60,18 @@ describe('review routes', () => {
     router = fixture.debugElement.injector.get(Router);
     router.navigate(['/']);
     await whenAllChangesDone();
-  })
+  });
 
   it('should not show review page before spec shots are loaded', () => {
     expect(findReviewPage()).toBeFalsy();
-  })
+  });
 
   it('when spec shots are loaded then should show overview', async () => {
     mockedBackend.sendSpecShots(testData);
     await whenAllChangesDone();
     expect(findReviewPage()).toBeTruthy();
     expect(findOverviewPage()).toBeTruthy();
-  })
+  });
 
   it('check if spec shot exist before navigating there', async () => {
     mockedBackend.sendSpecShots(testData);
@@ -79,7 +79,7 @@ describe('review routes', () => {
     router.navigate(['id-does-not-exist']);
     await whenAllChangesDone();
     expect(findDetailsPage()).toBeFalsy();
-  })
+  });
 
   it('when details page exists then should navigate there', async () => {
     // given
@@ -87,16 +87,16 @@ describe('review routes', () => {
     await whenAllChangesDone();
     const specShotIdToShow = testData[1].id;
 
-    //when
+    // when
     router.navigate([specShotIdToShow]);
     await whenAllChangesDone();
     await whenAllChangesDone();
 
-    //then
+    // then
     const detailsPage = findDetailsPage();
     expect(detailsPage).toBeTruthy();
     expect(detailsPage.componentInstance.specShot.id).toBe(specShotIdToShow);
-  })
+  });
 
   function findReviewPage() {
     return fixture.debugElement.query(By.directive(ReviewPageComponent));

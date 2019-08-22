@@ -14,7 +14,7 @@ export function createSpecShotFile(filename: string) {
     filename,
     size: simpleHashFrom(filename),
     timestamp: Date.now() + nextTimeOffset++,
-  }
+  };
 }
 
 export function createSpecShot(
