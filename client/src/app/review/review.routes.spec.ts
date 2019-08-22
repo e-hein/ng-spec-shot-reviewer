@@ -85,7 +85,7 @@ describe('review routes', () => {
     // given
     mockedBackend.sendSpecShots(testData);
     await whenAllChangesDone();
-    const specShotIdToShow = testData[0].id;
+    const specShotIdToShow = testData[1].id;
 
     //when
     router.navigate([specShotIdToShow]);

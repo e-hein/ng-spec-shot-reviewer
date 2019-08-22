@@ -3,6 +3,8 @@ import { SpecShot, SpecShotFile } from 'api';
 export const useDefault = undefined;
 export const doNotSet = null;
 
+let nextTimeOffset = 0;
+
 function simpleHashFrom(text: string, max = 1000) {
   return Array.from(text).reduce((sum, char, i) => sum + char.charCodeAt(0) * i, 0) % max;
 }
@@ -11,16 +13,16 @@ export function createSpecShotFile(filename: string) {
   return {
     filename,
     size: simpleHashFrom(filename),
-    timestamp: Date.now(),
+    timestamp: Date.now() + nextTimeOffset++,
   }
 }
 
 export function createSpecShot(
   id: string,
   title = id + ' title',
-  actual: SpecShotFile | typeof doNotSet = createSpecShotFile('actual-' + id),
-  diff: SpecShotFile | typeof doNotSet = createSpecShotFile('diff-' + id),
-  baseline: SpecShotFile | typeof doNotSet = createSpecShotFile('baseline-' + id),
+  actual: SpecShotFile | null = createSpecShotFile('actual-' + id),
+  diff: SpecShotFile | null = createSpecShotFile('diff-' + id),
+  baseline: SpecShotFile | null = createSpecShotFile('baseline-' + id),
   approved = false
 ) {
   return {
