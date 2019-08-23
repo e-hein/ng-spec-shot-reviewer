@@ -106,4 +106,6 @@ if (cfg.testPageUrl) {
 console.log(chalk.yellow(cfg.backendUrl), 'ssr endpoint');
 app.use(cfg.backendUrl, new SsrEndpoint(cfg.endpoint).middleware);
 
-app.listen(cfg.port, cfg.hostname, () => console.log(chalk.green('\nspec shot reviewer listening on ' + cfg.port + '\n')));
+const server = app.listen(cfg.port, cfg.hostname, () => console.log(chalk.green('\nspec shot reviewer listening on ' + cfg.port + '\n')));
+
+process.on('SIGTERM', () => server.close());
