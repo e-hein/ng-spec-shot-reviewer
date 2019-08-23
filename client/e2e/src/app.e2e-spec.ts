@@ -20,7 +20,7 @@ describe('workspace-project App', () => {
     });
 
     it('should select spec shot', async () => {
-      await ReviewPage.selectSpecShotByIndex(0);
+      await ReviewPage.selectSpecShotByIndex(2);
       expect(await browser.imageComparison.checkFullPageScreen('review-page-details')).toEqual(0);
     });
   });
