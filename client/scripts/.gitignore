@@ -1,1 +1,2 @@
-backend.pid
+server.pid
+server-*.log
