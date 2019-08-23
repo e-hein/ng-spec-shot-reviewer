@@ -39,9 +39,6 @@ finally:
 --------
 open your browser at [http://localhost:8090/spec-shot-reviewer/en](http://localhost:8090/spec-shot-reviewer/en)
 
-more description coming soon ...
-
-
 ![screenshot](./client/e2e/spec-shots/baseline/desktop_chrome/review-page-details-en-500x1024.png)
 
 
