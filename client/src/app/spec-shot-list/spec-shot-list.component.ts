@@ -10,6 +10,7 @@ import { SpecShot } from 'api';
 export class SpecShotListComponent {
   @Input() public specShots: SpecShot[];
   @Input() public selected: SpecShot;
+  // tslint:disable-next-line: no-output-native
   @Output() public select = new EventEmitter<SpecShot>();
   public trackById: TrackByFunction<{ id: string}> = (_, obj) => obj.id;
 

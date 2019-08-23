@@ -9,7 +9,7 @@ export class SubscriptionCollection {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.push = () => {
       throw new Error('subscription collection already destroyed');
-    }
+    };
     delete this.subscriptions;
   }
 }

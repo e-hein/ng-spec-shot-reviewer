@@ -62,9 +62,9 @@ describe('ReviewOverviewPageComponent', () => {
   it('when spec shot selected in spec shot list then it should navigate on spec shot selection', async () => {
     const navigationSpy = spyOn(fixture.debugElement.injector.get(Router), 'navigate');
 
-    await selectSpecShot(testData[0]);
+    await selectSpecShot(testData[1]);
 
-    expect(navigationSpy).toHaveBeenCalledWith([testData[0].id], jasmine.anything());
+    expect(navigationSpy).toHaveBeenCalledWith([testData[1].id], jasmine.anything());
   });
 
   it(

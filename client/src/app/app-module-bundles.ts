@@ -6,4 +6,4 @@ export const appModulesBundles = {
     MatCardModule,
     MatIconModule,
   ],
-}
+};

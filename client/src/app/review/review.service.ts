@@ -36,8 +36,8 @@ export class ReviewService {
     );
   }
 
-  private setupApprovedSpecShots(specShots: Observable<SpecShot[]>) {
-    return specShots.pipe(
+  private setupApprovedSpecShots(specShots$: Observable<SpecShot[]>) {
+    return specShots$.pipe(
       map((specShots) => specShots.filter((specShot) => specShot.approved)),
       publishReplay(1),
       refCount(),
@@ -56,7 +56,7 @@ export class ReviewService {
 
   private async voteClientSide(specShotId: string, vote: boolean) {
     const specShots = await this.specShots.pipe(take(1)).toPromise();
-    const specShotIndex = specShots.findIndex((specShot) => specShot.id === specShotId);
+    const specShotIndex = specShots.findIndex((specShotCandidate) => specShotCandidate.id === specShotId);
     const specShot = specShots[specShotIndex];
     if (specShot.approved === vote) {
       return;

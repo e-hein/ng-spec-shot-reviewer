@@ -17,5 +17,5 @@ export namespace App {
     navigateTo: (targetPageUrl: string) => {
       return App.mainNav.findNavLink(targetPageUrl).click();
     }
-  }
+  };
 }

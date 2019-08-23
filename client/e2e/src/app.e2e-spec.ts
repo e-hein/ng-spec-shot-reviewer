@@ -1,4 +1,4 @@
-import { browser, logging, by } from 'protractor';
+import { browser, logging } from 'protractor';
 import { screensizes } from './screensizes';
 import { App } from './utils/app.ns';
 import { ReviewPage } from './utils/review-page.ns';
@@ -19,14 +19,14 @@ describe('workspace-project App', () => {
         beforeEach(() => App.mainNav.navigateTo('/review'));
 
         it('should navigate to review page', async () => {
-          expect(await browser.imageComparison.checkFullPageScreen('review-page-' + screensize.title, { /* some options*/ })).toEqual(0);
-        })
+          expect(await browser.imageComparison.checkFullPageScreen('review-page-' + screensize.title)).toEqual(0);
+        });
 
         it('should select spec shot', async () => {
           await ReviewPage.selectSpecShotByIndex(0);
-          expect(await browser.imageComparison.checkFullPageScreen('review-page-details-' + screensize.title, { /* some options*/ })).toEqual(0);
-        })
-      })
+          expect(await browser.imageComparison.checkFullPageScreen('review-page-details-' + screensize.title)).toEqual(0);
+        });
+      });
 
       afterEach(async () => {
         // Assert that there are no errors emitted from the browser

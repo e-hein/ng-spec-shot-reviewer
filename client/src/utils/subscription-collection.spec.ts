@@ -1,10 +1,10 @@
-import { SubscriptionCollection } from "./index";
+import { SubscriptionCollection } from './index';
 import { Subscription } from 'rxjs';
 
 describe('utils subscription collection', () => {
   it('when destroyed then it should unsubscribe all subscriptions', () => {
     const subscriptions = new SubscriptionCollection();
-    let subscribed = { a: true, b: true, c: true };
+    const subscribed = { a: true, b: true, c: true };
 
     subscriptions.push(
       { unsubscribe: () => { delete subscribed.a; } } as Subscription,
@@ -23,4 +23,5 @@ describe('utils subscription collection', () => {
 
     expect(() => subscriptions.push({} as Subscription)).toThrow();
   });
-})
+});
+

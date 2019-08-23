@@ -1,9 +1,10 @@
-import { LoadableClientDataState } from "./loadable-client-data-state";
+import { LoadableClientDataState } from './loadable-client-data-state';
 import { take } from 'rxjs/operators';
 
 describe('utils loadable client data state', () => {
   it('when not subscribed then should not load', () => {
     const loadState = jasmine.createSpy('loadState');
+    // tslint:disable-next-line: no-unused-expression
     new LoadableClientDataState(loadState);
     expect(loadState).not.toHaveBeenCalled();
   });
@@ -65,7 +66,9 @@ describe('utils loadable client data state', () => {
 
   it('reload should distribute updates to all subscriptions', async () => {
     let resolveResponse: (response: string) => void;
-    const loadState: () => Promise<string> = jasmine.createSpy('loadState').and.returnValue(new Promise(resolve => resolveResponse = resolve));
+    const loadState: () => Promise<string> = jasmine.createSpy('loadState')
+      .and.returnValue(new Promise(resolve => resolveResponse = resolve))
+    ;
     const loadableClientState = new LoadableClientDataState(loadState);
 
     const calls = [
@@ -84,7 +87,9 @@ describe('utils loadable client data state', () => {
 
   it('when value exists should not initialize anymore', async () => {
     let resolveResponse: (response: string) => void;
-    const loadState: () => Promise<string> = jasmine.createSpy('loadState').and.returnValue(new Promise(resolve => resolveResponse = resolve));
+    const loadState: () => Promise<string> = jasmine.createSpy('loadState')
+      .and.returnValue(new Promise(resolve => resolveResponse = resolve))
+    ;
     const loadableClientState = new LoadableClientDataState(loadState);
 
     const calls = [
@@ -111,4 +116,4 @@ describe('utils loadable client data state', () => {
     expect(loadState).not.toHaveBeenCalled();
     expect(result).toBe('a');
   });
-})
+});
