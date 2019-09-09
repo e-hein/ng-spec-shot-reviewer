@@ -37,7 +37,7 @@
     "pree2e:en": "npm run start-server",
     "e2e:en": "protractor ./e2e/protractor.en.conf.js",
 
-    "-pree2e:all": "npm run build:all",
+    "pree2e:all": "npm run build:all",
     "e2e:all": "npm run e2e",
     "poste2e:all": "npm run e2e:de",
     "postposte2e:all": "npm run e2e:en",
