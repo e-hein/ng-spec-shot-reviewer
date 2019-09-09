@@ -3,6 +3,7 @@ const { accessSync, openSync, readFileSync, statSync, unlinkSync, writeFileSyncÂ
 const chalk = require('chalk');
 const { SIGTERM } = require('constants');
 const { cfg } = require('./service-cfg');
+const { isWindows } = require('./common.functions');
 
 console.log({cfg});
 
@@ -102,7 +103,11 @@ function stopServer() {
   const pid = parseInt(readFileSync(cfg.pidFilePath, 'utf-8'));
   unlinkSync(cfg.pidFilePath);
   console.log('stop server with pid ' + pid);
-  process.kill(pid, SIGTERM);
+  if (isWindows()) {
+    spawn("taskkill", ["/pid", pid, '/f', '/t']);
+  } else {
+    process.kill(pid, SIGTERM);
+  }
   return new Promise(resolve => setTimeout(resolve, 1000));
 }
 

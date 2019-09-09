@@ -1,10 +1,13 @@
 const { join, resolve, relative } = require('path');
 const { spawn } = require('child_process');
+const { isWindows } = require('./common.functions');
+
+const cmdSuffix = isWindows() ? '.cmd' : '';
 
 const basePath = resolve('..');
 const sampleProjectPath = resolve(join(basePath, 'sample-projects', 'toh-pt6'));
 const serverPath = relative(sampleProjectPath, join(basePath, 'server'));
-const tsNodePath = join(serverPath, 'node_modules', '.bin', 'ts-node');
+const tsNodePath = join(serverPath, 'node_modules', '.bin', 'ts-node' + cmdSuffix);
 const relServerPath = join('..', '..', '..', '..', 'server');
 const tsConfigPath = join(relServerPath, 'tsconfig.json');
 const appPath = join(serverPath, 'app.ts');

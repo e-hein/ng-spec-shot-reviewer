@@ -37,9 +37,11 @@
     "pree2e:en": "npm run start-server",
     "e2e:en": "protractor ./e2e/protractor.en.conf.js",
 
-    "pree2e:all": "npm run build:all",
-    "e2e:all": "npm run e2e; npm run e2e:de; npm run e2e:en",
-    "poste2e:all": "npm run review",
+    "-pree2e:all": "npm run build:all",
+    "e2e:all": "npm run e2e",
+    "poste2e:all": "npm run e2e:de",
+    "postposte2e:all": "npm run e2e:en",
+    "postpostpostposte2e:all": "npm run review",
 
     "prereview": "npm run stop-server",
     "review": "ts-node -P ../server/tsconfig.json -e \"process.env.DEBUG_MODE = 'true'; require('../server/app.ts');\""

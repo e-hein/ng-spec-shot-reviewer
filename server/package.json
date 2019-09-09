@@ -14,7 +14,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "postbuild": "cp run.js dist/",
+    "postbuild": "node scripts/cp-run.js",
     "start": "ts-node app.ts",
     "test": "ts-mocha **/*.spec.ts"
   },

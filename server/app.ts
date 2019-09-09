@@ -31,6 +31,7 @@ try {
   if (!protractorCfgPath) {
     throw new Error('protractor conf file not found');
   }
+  console.log('protractor conf found at: ' + protractorCfgPath);
   const config = require(protractorCfgPath).config;
   const imgCfg = config.plugins.find((plugin) => plugin.package === 'protractor-image-comparison');
 
@@ -42,7 +43,7 @@ try {
     cfg.endpoint.directories.baseline = imgCfg.options.baselineFolder;
   }
 } catch (e) {
-  console.warn('no protractor conf found');
+  console.warn('could not read protractor conf: ', e);
 }
 
 function deployAngularApp(distFolder: string) {
