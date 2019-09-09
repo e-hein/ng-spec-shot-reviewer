@@ -15,18 +15,36 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "test": "ng test --watch false --code-coverage",
+    "posttest": "npm run e2e:all",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "i18n": "ng xi18n --out-file src/locale/messages.xlf",
     "build:de": "ng build --prod --i18nLocale de --i18nFile src/locale/messages.de.xlf --base-href /spec-shot-reviewer/de/ --output-path ../server/dist/frontend/spec-shot-reviewer/de",
-    "e2e:de": "protractor ./e2e/protractor.de.conf.js",
     "build:en": "ng build --prod --i18nLocale en --base-href /spec-shot-reviewer/en/ --output-path ../server/dist/frontend/spec-shot-reviewer/en",
-    "e2e:en": "protractor ./e2e/protractor.en.conf.js",
-    "server-start": "ts-node -P ../server/tsconfig.json ../server/app.ts",
+    "start-server": "node scripts/server-as-service.js restart",
+    "stop-server": "node scripts/server-as-service.js stopIfPresent",
     "update-webdriver": "webdriver-manager update",
-    "build:all": "npm run build:de; npm run build:en",
-    "e2e:all": "npm run e2e; npm run e2e:de; npm run e2e:en"
+
+    "prebuild:all": "npm run build:de",
+    "build:all": "npm run build:en",
+
+    "pree2e": "npm run start-server",
+    "e2e": "ng e2e",
+
+    "pree2e:de": "npm run start-server",
+    "e2e:de": "protractor ./e2e/protractor.de.conf.js",
+
+    "pree2e:en": "npm run start-server",
+    "e2e:en": "protractor ./e2e/protractor.en.conf.js",
+
+    "pree2e:all": "npm run build:all",
+    "e2e:all": "npm run e2e",
+    "poste2e:all": "npm run e2e:de",
+    "postposte2e:all": "npm run e2e:en",
+    "postpostpostposte2e:all": "npm run review",
+
+    "prereview": "npm run stop-server",
+    "review": "ts-node -P ../server/tsconfig.json -e \"process.env.DEBUG_MODE = 'true'; require('../server/app.ts');\""
   },
   "dependencies": {
     "@angular/animations": "~8.2.0",
@@ -52,6 +70,7 @@
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
+    "@types/shelljs": "^0.8.5",
     "codelyzer": "^5.0.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -62,6 +81,7 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "protractor": "~5.4.0",
     "protractor-image-comparison": "^3.3.0",
+    "shelljs": "^0.8.3",
     "ts-node": "^8.3.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3"

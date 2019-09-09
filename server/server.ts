@@ -27,6 +27,7 @@ export class FsSsrServer implements SsrServer {
   private loadApprovements() {
     if (!canReadFsNode(this.cfg.approvedFilePath)) {
       console.warn(chalk.yellow('WARN: did not found any approvements, yet'));
+      console.warn(`approvement lookup path: ${this.cfg.approvedFilePath}`);
       return [];
     }
 
@@ -41,6 +42,7 @@ export class FsSsrServer implements SsrServer {
 
     if (!canReadFsNode(baseDir)) {
       console.warn(chalk.yellow(`WARN: no '${type}'-images found!`));
+      console.warn(`${type} lookup path: ${baseDir}`);
       return;
     }
 
@@ -48,7 +50,7 @@ export class FsSsrServer implements SsrServer {
     this.findSpecShots(baseDir)
       .forEach((specShotFile) => {
         const path = parse(relativePath(baseDir, specShotFile.filename));
-        const id = encodeURIComponent(joinPath(path.dir, path.name));
+        const id = encodeURIComponent(path.dir + '/' + path.name);
         specShotFile.filename = joinPath(type, relativePath(baseDir, specShotFile.filename));
         const specShot = this.getOrCreateSpecShot(id);
         specShot[type] = specShotFile;

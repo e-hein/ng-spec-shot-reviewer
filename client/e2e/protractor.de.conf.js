@@ -14,8 +14,18 @@ exports.config = {
     './src/**/*.e2e-spec.ts'
   ],
   capabilities: {
-    'browserName': 'chrome',
-    'logName': 'de'
+    logName: 'de',
+    browserName: 'chrome',
+    chromeOptions: {
+      args: [ "--headless", "--disable-gpu" ],
+      mobileEmulation: {
+        "deviceMetrics": {
+            "width": 500,
+            "height": 1024,
+            "pixelRatio": 1.0
+        }
+      }
+    },
   },
   directConnect: true,
   baseUrl: 'http://localhost:8090/spec-shot-reviewer/de',
